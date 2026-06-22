@@ -1,18 +1,18 @@
 {
-  "name": "even-better-toml",
-  "displayName": "Even Better TOML",
-  "description": "Fully-featured TOML support",
-  "version": "0.21.2",
+  "name": "chinese-toml-support",
+  "displayName": "Chinese TOML Support",
+  "description": "TOML language support with Chinese key support",
+  "version": "0.1.0",
   "autoTag": {
     "enabled": true
   },
   "repository": {
-    "url": "https://github.com/tamasfe/taplo"
+    "url": "https://github.com/<username>/taplo.git"
   },
   "bugs": {
-    "url": "https://github.com/tamasfe/taplo/issues"
+    "url": "https://github.com/<username>/taplo/issues"
   },
-  "publisher": "tamasfe",
+  "publisher": "<your-publisher-name>",
   "author": {
     "name": "tamasfe"
   },
