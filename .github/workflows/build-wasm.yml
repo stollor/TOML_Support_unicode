@@ -35,7 +35,7 @@ jobs:
 
       - name: Generate WASM bindings
         run: |
-          wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
+          wasm-bindgen crates/taplo-wasm/target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
             --out-dir js/lsp/pkg \
             --target nodejs
 
