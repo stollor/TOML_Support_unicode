@@ -16,10 +16,12 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Remove packageManager field
+      - name: Remove packageManager and fix build script
         run: |
           cd editors/vscode
           sed -i '/"packageManager"/d' package.json
+          sed -i 's/exec("yarn"/exec("npm", ["run"]/g' scripts/build.mjs
+          sed -i 's/]);$/])/g' scripts/build.mjs
 
       - name: Install dependencies
         run: |
@@ -29,7 +31,7 @@ jobs:
       - name: Build extension
         run: |
           cd editors/vscode
-          npx rollup -c rollup.config.mjs
+          npm run build
 
       - name: Package VSIX
         run: |
