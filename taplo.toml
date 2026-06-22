@@ -60,3 +60,6 @@ include = ["pyproject.toml"]
 align_entries  = true
 reorder_keys   = false
 align_comments = true
+
+[keys]
+allowed_patterns = ["[\\w\\u4e00-\\u9fff\\u3400-\\u4dbf+-]+"]
