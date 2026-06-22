@@ -24,3 +24,30 @@ The correctness of the TOML parsing and decoding is not yet entirely guaranteed 
 ## Contributing
 
 All kinds of contributions are welcome. Make sure to read the [CONTRIBUTING.md](CONTRIBUTING.md) first!
+
+## Chinese TOML Support
+
+A VSCode extension that provides TOML language support with Chinese key support.
+
+### Features
+
+- Syntax highlighting for Chinese keys
+- Auto-completion for Chinese keys
+- Error checking for Chinese keys
+- Full LSP support
+
+### Installation
+
+Install from VSCode Marketplace or install the VSIX file directly.
+
+### Usage
+
+Open any `.toml` file with Chinese keys and enjoy full language support.
+
+### Configuration
+
+The extension uses taplo as the language server. You can configure it using a `taplo.toml` file in your project root.
+
+### License
+
+MIT
