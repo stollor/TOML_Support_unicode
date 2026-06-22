@@ -1,7 +1,7 @@
 {
-  "name": "chinese-toml-support",
-  "displayName": "Chinese TOML Support",
-  "description": "TOML language support with Chinese key support",
+  "name": "toml-support-unicode",
+  "displayName": "TOML Support Unicode",
+  "description": "TOML language support for non-ASCII bare keys (Chinese, Japanese, Korean, etc.)",
   "version": "0.1.0",
   "autoTag": {
     "enabled": true
@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/<username>/taplo/issues"
   },
-  "publisher": "chinese-toml-support",
+  "publisher": "toml-support-unicode",
   "author": {
     "name": "tamasfe"
   },
