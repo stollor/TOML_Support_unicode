@@ -1,4 +1,4 @@
-name: Build WASM and Package Extension
+name: Build Extension
 
 on:
   push:
@@ -6,78 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-wasm:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Cache cargo
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-
-      - name: Build taplo-wasm
-        run: |
-          cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release 2>&1 | tee build.log
-          echo "=== Build exit code: $? ==="
-          echo "=== Last 50 lines of build log ==="
-          tail -50 build.log
-
-      - name: Install wasm-bindgen
-        run: |
-          echo "=== Downloading wasm-bindgen ==="
-          wget https://github.com/nicolo-ribaudo/tc39-proposal-grouped-and-joined/releases/download/v0.2.125/wasm-bindgen-0.2.125-x86_64-unknown-linux-musl.tar.gz -O wasm-bindgen.tar.gz
-          tar -xzf wasm-bindgen.tar.gz
-          mv wasm-bindgen-0.2.125-x86_64-unknown-linux-musl/wasm-bindgen /usr/local/bin/
-          chmod +x /usr/local/bin/wasm-bindgen
-          echo "=== wasm-bindgen installed ==="
-          wasm-bindgen --version
-
-      - name: Generate WASM bindings
-        run: |
-          echo "=== Checking WASM file ==="
-          ls -la target/wasm32-unknown-unknown/release/taplo_wasm.wasm || echo "WASM file not found"
-          echo "=== Running wasm-bindgen ==="
-          wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
-            --out-dir js/lsp/pkg \
-            --target nodejs 2>&1 || {
-            echo "=== wasm-bindgen failed ==="
-            echo "=== Checking wasm-bindgen version ==="
-            wasm-bindgen --version
-            echo "=== Checking WASM file size ==="
-            ls -lh target/wasm32-unknown-unknown/release/taplo_wasm.wasm
-            exit 1
-          }
-          echo "=== Checking output ==="
-          ls -la js/lsp/pkg/
-
-      - name: Upload WASM artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: taplo-wasm
-          path: js/lsp/pkg/
-
-  build-extension:
-    needs: build-wasm
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download WASM artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: taplo-wasm
-          path: js/lsp/pkg/
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -89,11 +21,6 @@ jobs:
           cd editors/vscode
           npm install
 
-      - name: Copy WASM to extension
-        run: |
-          cp js/lsp/pkg/taplo_wasm_bg.wasm editors/vscode/dist/
-          cp js/lsp/pkg/taplo_wasm.js editors/vscode/dist/
-
       - name: Build extension
         run: |
           cd editors/vscode
@@ -102,33 +29,10 @@ jobs:
       - name: Package VSIX
         run: |
           cd editors/vscode
-          npx vsce package
+          npx @vscode/vsce package --allow-missing-repository
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chinese-toml-support
+          name: toml-support-unicode
           path: editors/vscode/*.vsix
-
-      - name: Create Release
-        if: github.ref == 'refs/heads/feature/chinese-key-support'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: editors/vscode/*.vsix
-          tag_name: v0.1.0
-          name: Chinese TOML Support v0.1.0
-          body: |
-            ## Chinese TOML Support
-
-            VSCode extension with Chinese key support for TOML files.
-
-            ### Features
-            - Syntax highlighting for Chinese keys
-            - LSP support for Chinese bare keys
-            - Full taplo language server functionality
-
-            ### Installation
-            1. Download the `.vsix` file
-            2. Run `code --install-extension chinese-toml-support-0.1.0.vsix`
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
