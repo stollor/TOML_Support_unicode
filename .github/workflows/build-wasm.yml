@@ -1,0 +1,112 @@
+name: Build WASM and Package Extension
+
+on:
+  push:
+    branches: [feature/chinese-key-support]
+  workflow_dispatch:
+
+jobs:
+  build-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build taplo-wasm
+        run: |
+          cd crates/taplo-wasm
+          cargo build --target wasm32-unknown-unknown --features lsp --release
+
+      - name: Install wasm-bindgen
+        run: cargo install wasm-bindgen-cli
+
+      - name: Generate WASM bindings
+        run: |
+          wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
+            --out-dir js/lsp/pkg \
+            --target nodejs
+
+      - name: Upload WASM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: taplo-wasm
+          path: js/lsp/pkg/
+
+  build-extension:
+    needs: build-wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download WASM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: taplo-wasm
+          path: js/lsp/pkg/
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd editors/vscode
+          npm install
+
+      - name: Copy WASM to extension
+        run: |
+          cp js/lsp/pkg/taplo_wasm_bg.wasm editors/vscode/dist/
+          cp js/lsp/pkg/taplo_wasm.js editors/vscode/dist/
+
+      - name: Build extension
+        run: |
+          cd editors/vscode
+          npm run build
+
+      - name: Package VSIX
+        run: |
+          cd editors/vscode
+          npx vsce package
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chinese-toml-support
+          path: editors/vscode/*.vsix
+
+      - name: Create Release
+        if: github.ref == 'refs/heads/feature/chinese-key-support'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: editors/vscode/*.vsix
+          tag_name: v0.1.0
+          name: Chinese TOML Support v0.1.0
+          body: |
+            ## Chinese TOML Support
+
+            VSCode extension with Chinese key support for TOML files.
+
+            ### Features
+            - Syntax highlighting for Chinese keys
+            - LSP support for Chinese bare keys
+            - Full taplo language server functionality
+
+            ### Installation
+            1. Download the `.vsix` file
+            2. Run `code --install-extension chinese-toml-support-0.1.0.vsix`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
