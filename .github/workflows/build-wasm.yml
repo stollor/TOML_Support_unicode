@@ -36,7 +36,7 @@ jobs:
       - name: Install wasm-bindgen
         run: |
           echo "=== Downloading wasm-bindgen ==="
-          curl -L https://github.com/nicolo-ribaudo/tc39-proposal-grouped-and-joined/releases/download/v0.2.125/wasm-bindgen-0.2.125-x86_64-unknown-linux-musl.tar.gz -o wasm-bindgen.tar.gz
+          wget https://github.com/nicolo-ribaudo/tc39-proposal-grouped-and-joined/releases/download/v0.2.125/wasm-bindgen-0.2.125-x86_64-unknown-linux-musl.tar.gz -O wasm-bindgen.tar.gz
           tar -xzf wasm-bindgen.tar.gz
           mv wasm-bindgen-0.2.125-x86_64-unknown-linux-musl/wasm-bindgen /usr/local/bin/
           chmod +x /usr/local/bin/wasm-bindgen
