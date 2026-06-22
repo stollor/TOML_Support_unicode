@@ -16,20 +16,23 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
         run: |
           cd editors/vscode
-          npm install
+          yarn install
 
       - name: Build extension
         run: |
           cd editors/vscode
-          npm run build
+          yarn build
 
       - name: Package VSIX
         run: |
           cd editors/vscode
-          npx @vscode/vsce package --allow-missing-repository
+          yarn dlx @vscode/vsce package --allow-missing-repository
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
