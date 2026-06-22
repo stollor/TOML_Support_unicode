@@ -27,7 +27,13 @@ jobs:
 
       - name: Build taplo-wasm
         run: |
-          cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release 2>&1
+          echo "=== Starting WASM build ==="
+          cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release 2>&1 || {
+            echo "=== Build failed, checking error ==="
+            cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release 2>&1 | tail -100
+            exit 1
+          }
+          echo "=== Build completed ==="
 
       - name: Debug - Check WASM output
         run: |
