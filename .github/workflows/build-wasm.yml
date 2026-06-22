@@ -30,6 +30,11 @@ jobs:
           cd crates/taplo-wasm
           cargo build --target wasm32-unknown-unknown --features lsp --release
 
+      - name: Debug - Check WASM output
+        run: |
+          ls -la crates/taplo-wasm/target/wasm32-unknown-unknown/release/ || echo "Directory not found"
+          find . -name "*.wasm" 2>/dev/null | head -20
+
       - name: Install wasm-bindgen
         run: cargo install wasm-bindgen-cli
 
