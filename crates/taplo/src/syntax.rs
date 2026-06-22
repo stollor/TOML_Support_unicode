@@ -17,12 +17,12 @@ pub enum SyntaxKind {
     #[regex(r"#[^\n\r]*")]
     COMMENT,
 
-    #[regex(r"[A-Za-z0-9_-]+", priority = 2)]
+    #[regex(r"[A-Za-z0-9_\-\p{Han}]+", priority = 2)]
     IDENT,
 
     /// Not part of the regular TOML syntax, only used to allow
     /// glob patterns in keys.
-    #[regex(r"[*?A-Za-z0-9_-]+")]
+    #[regex(r"[*?A-Za-z0-9_\-\p{Han}]+")]
     IDENT_WITH_GLOB,
 
     #[token(".")]

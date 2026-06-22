@@ -1,0 +1,30 @@
+name: Build Extension
+
+on:
+  push:
+    branches: [feature/chinese-key-support]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prepare and package VSIX
+        run: |
+          cd editors/vscode
+          sed -i '/"packageManager"/d' package.json
+          npm install @vscode/vsce --no-save
+          npx @vscode/vsce package --allow-missing-repository
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: toml-support-unicode
+          path: editors/vscode/*.vsix

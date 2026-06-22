@@ -1,18 +1,18 @@
 {
-  "name": "even-better-toml",
-  "displayName": "Even Better TOML",
-  "description": "Fully-featured TOML support",
-  "version": "0.21.2",
+  "name": "toml-support-unicode",
+  "displayName": "TOML Support Unicode",
+  "description": "TOML language support for non-ASCII bare keys (Chinese, Japanese, Korean, etc.)",
+  "version": "0.1.0",
   "autoTag": {
     "enabled": true
   },
   "repository": {
-    "url": "https://github.com/tamasfe/taplo"
+    "url": "https://github.com/<username>/taplo.git"
   },
   "bugs": {
-    "url": "https://github.com/tamasfe/taplo/issues"
+    "url": "https://github.com/<username>/taplo/issues"
   },
-  "publisher": "tamasfe",
+  "publisher": "toml-support-unicode",
   "author": {
     "name": "tamasfe"
   },
@@ -397,7 +397,7 @@
   "main": "./dist/extension.js",
   "browser": "./dist/browser-extension.js",
   "scripts": {
-    "vscode:prepublish": "yarn build",
+    "vscode:prepublish": "npm run build",
     "open-in-browser": "vscode-test-web --extensionDevelopmentPath=. .",
     "build:syntax": "ts-node --project node.tsconfig.json src/syntax/index.ts",
     "build:browser-extension": "rollup -c rollup.config.browser-extension.mjs",
@@ -428,6 +428,5 @@
     "rollup-plugin-esbuild": "^6.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
-  },
-  "packageManager": "yarn@4.0.2"
+  }
 }
