@@ -16,6 +16,11 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Remove packageManager field
+        run: |
+          cd editors/vscode
+          sed -i '/"packageManager"/d' package.json
+
       - name: Install dependencies
         run: |
           cd editors/vscode
