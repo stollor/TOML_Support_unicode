@@ -27,12 +27,11 @@ jobs:
 
       - name: Build taplo-wasm
         run: |
-          cd crates/taplo-wasm
-          cargo build --target wasm32-unknown-unknown --features lsp --release
+          cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release
 
       - name: Debug - Check WASM output
         run: |
-          ls -la crates/taplo-wasm/target/wasm32-unknown-unknown/release/ || echo "Directory not found"
+          ls -la target/wasm32-unknown-unknown/release/*.wasm || echo "No WASM files found"
           find . -name "*.wasm" 2>/dev/null | head -20
 
       - name: Install wasm-bindgen
@@ -40,7 +39,8 @@ jobs:
 
       - name: Generate WASM bindings
         run: |
-          wasm-bindgen crates/taplo-wasm/target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
+          mkdir -p js/lsp/pkg
+          wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
             --out-dir js/lsp/pkg \
             --target nodejs
 
