@@ -29,21 +29,12 @@ jobs:
       - name: Build taplo-wasm
         run: |
           echo "=== Starting WASM build ==="
-          cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release 2>&1 || {
-            echo "=== Build failed, checking error ==="
-            cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release 2>&1 | tail -100
-            exit 1
-          }
+          cargo build -p taplo-wasm --target wasm32-unknown-unknown --features lsp --release
           echo "=== Build completed ==="
-
-      - name: Debug - Check WASM output
-        run: |
+          echo "=== Checking for WASM files ==="
+          find . -name "*.wasm" -type f 2>/dev/null
           echo "=== Checking target directory ==="
           ls -la target/wasm32-unknown-unknown/release/ || echo "target dir not found"
-          echo "=== Searching for WASM files ==="
-          find . -name "*.wasm" -type f 2>/dev/null
-          echo "=== Checking for taplo_wasm ==="
-          find . -name "*taplo*wasm*" -type f 2>/dev/null
 
       - name: Install wasm-bindgen
         run: cargo install wasm-bindgen-cli
