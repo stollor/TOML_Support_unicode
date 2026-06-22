@@ -14,17 +14,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: |
           cd editors/vscode
-          npm install --ignore-scripts --legacy-peer-deps
+          npm install --legacy-peer-deps
 
       - name: Build extension
         run: |
           cd editors/vscode
-          npm run build
+          npx rollup -c rollup.config.mjs
 
       - name: Package VSIX
         run: |
