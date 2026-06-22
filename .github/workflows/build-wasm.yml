@@ -38,15 +38,17 @@ jobs:
 
       - name: Generate WASM bindings
         run: |
+          echo "=== Checking WASM file ==="
+          ls -la target/wasm32-unknown-unknown/release/taplo_wasm.wasm || echo "WASM file not found"
+          echo "=== Installing wasm-bindgen ==="
+          wasm-bindgen --version
+          echo "=== Generating bindings ==="
           mkdir -p js/lsp/pkg
-          if [ -f "target/wasm32-unknown-unknown/release/taplo_wasm.wasm" ]; then
-            wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
-              --out-dir js/lsp/pkg \
-              --target nodejs
-          else
-            echo "ERROR: WASM file not found!"
-            exit 1
-          fi
+          wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
+            --out-dir js/lsp/pkg \
+            --target nodejs 2>&1
+          echo "=== Checking output ==="
+          ls -la js/lsp/pkg/
 
       - name: Upload WASM artifact
         uses: actions/upload-artifact@v4
