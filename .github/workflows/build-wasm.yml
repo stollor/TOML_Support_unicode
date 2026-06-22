@@ -16,16 +16,21 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install dependencies
+      - name: Download pre-built dist from npm
         run: |
           cd editors/vscode
-          npm install --legacy-peer-deps --ignore-scripts
-          npx rollup --version
+          npm pack @taplo/lsp@0.8.1
+          tar -xzf taplo-lsp-0.8.1.tgz
+          mkdir -p dist
+          cp package/dist/* dist/ 2>/dev/null || true
+          rm -rf package taplo-lsp-0.8.1.tgz
 
-      - name: Build extension with rollup
+      - name: Build extension with esbuild
         run: |
           cd editors/vscode
-          npx rollup -c rollup.config.mjs
+          npm install esbuild --save-dev
+          npx esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node
+          npx esbuild src/server.ts --bundle --outfile=dist/server.js --external:vscode --format=cjs --platform=node
 
       - name: Package VSIX
         run: |
