@@ -1,3 +1,6 @@
+# Chinese TOML Key Test File
+# Tests bare key support for Chinese characters (CJK Unified Ideographs)
+
 [settings]
 transfer_duration = 0.3
 
@@ -38,3 +41,37 @@ transfer_duration = 0.3
 阴属性灵气 = "阴属性灵气"
 物品入 = "物品入"
 物品出 = "物品出"
+
+# Test: Chinese keys in dotted keys
+[节点.吸气]
+类型 = "吸气节点"
+产量 = 10
+
+[节点.呼气]
+类型 = "呼气节点"
+消耗 = 5
+
+# Test: Chinese keys in array tables
+[[物品列表]]
+名称 = "灵石"
+数量 = 100
+品质 = "普通"
+
+[[物品列表]]
+名称 = "丹药"
+数量 = 5
+品质 = "稀有"
+
+# Test: Mixed Chinese and English keys
+[config]
+节点名称 = "测试节点"
+node_type = "test"
+混合key = "mixed"
+
+# Test: Chinese keys in inline tables
+灵气配置 = { 金 = 1, 木 = 2, 水 = 3, 火 = 4, 土 = 5 }
+
+# Test: Quoted Chinese keys (should also work)
+[quoted_keys]
+"中文键" = "quoted value"
+"混合key" = "mixed quoted"

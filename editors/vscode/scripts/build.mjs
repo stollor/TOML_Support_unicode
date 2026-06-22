@@ -3,7 +3,7 @@
 import { exec, unlink } from "../../../scripts/utils.mjs";
 
 unlink("./dist");
-exec("yarn", ["build:syntax"]);
-exec("yarn", ["build:node"]);
-exec("yarn", ["build:browser-extension"]);
-exec("yarn", ["build:browser-server"]);
+exec("npm", ["run", "build:syntax"]);
+exec("npm", ["run", "build:node"]);
+exec("npm", ["run", "build:browser-extension"]);
+exec("npm", ["run", "build:browser-server"]);

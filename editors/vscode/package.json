@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/<username>/taplo/issues"
   },
-  "publisher": "<your-publisher-name>",
+  "publisher": "chinese-toml-support",
   "author": {
     "name": "tamasfe"
   },
@@ -397,7 +397,7 @@
   "main": "./dist/extension.js",
   "browser": "./dist/browser-extension.js",
   "scripts": {
-    "vscode:prepublish": "yarn build",
+    "vscode:prepublish": "npm run build",
     "open-in-browser": "vscode-test-web --extensionDevelopmentPath=. .",
     "build:syntax": "ts-node --project node.tsconfig.json src/syntax/index.ts",
     "build:browser-extension": "rollup -c rollup.config.browser-extension.mjs",
