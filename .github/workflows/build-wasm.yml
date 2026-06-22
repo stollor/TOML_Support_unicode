@@ -16,9 +16,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Package VSIX
+      - name: Prepare and package VSIX
         run: |
           cd editors/vscode
+          sed -i '/"packageManager"/d' package.json
           npm install @vscode/vsce --no-save
           npx @vscode/vsce package --allow-missing-repository
 
