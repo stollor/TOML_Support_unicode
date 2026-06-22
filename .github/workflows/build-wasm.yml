@@ -33,20 +33,15 @@ jobs:
           echo "=== Last 50 lines of build log ==="
           tail -50 build.log
 
-      - name: Install wasm-bindgen
-        run: cargo install wasm-bindgen-cli
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Generate WASM bindings
         run: |
           echo "=== Checking WASM file ==="
           ls -la target/wasm32-unknown-unknown/release/taplo_wasm.wasm || echo "WASM file not found"
-          echo "=== Installing wasm-bindgen ==="
-          wasm-bindgen --version
-          echo "=== Generating bindings ==="
-          mkdir -p js/lsp/pkg
-          wasm-bindgen target/wasm32-unknown-unknown/release/taplo_wasm.wasm \
-            --out-dir js/lsp/pkg \
-            --target nodejs 2>&1
+          echo "=== Running wasm-pack ==="
+          wasm-pack build --target nodejs --out-dir js/lsp/pkg -- --features lsp
           echo "=== Checking output ==="
           ls -la js/lsp/pkg/
 
